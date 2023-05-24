@@ -71,7 +71,7 @@ def launchGame(gameNumber):
             executableChoices.append(exe)
 
     if len(executableChoices) == 1:
-        os.system(f"{runCommand} games/'{gameDir}'/'{executableChoices[0]}'")
+        os.system(f'{runCommand} games/"{gameDir}"/"{executableChoices[0]}"')
     else:
         cls()
         count = 1
