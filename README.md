@@ -18,4 +18,5 @@ Pull requests always welcome
 ### TODO
 - Add .sh file support
 - Add custom game directory locations
+- Split functions into their own files
 - Other cool stuff I'm forgetting to do
