@@ -86,7 +86,7 @@ def launchGame(gameNumber):
         print("Have fun!")
         time.sleep(1)
         os.system(
-            f"{runCommand} games/'{gameDir}'/'{executableChoices[int(gameChoice)]}'"
+            f'{runCommand} games/"{gameDir}"/"{executableChoices[int(gameChoice)]}"'
         )
 
 
