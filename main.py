@@ -46,7 +46,7 @@ def setupUser():
             "Seems like you've entered something that doesn't work here. Welp, guess we'll just send ya to do it again :D"
         )
         return
-    print("among us")
+    
     cls()
     gameDirectory = input("Time to setup the directory where you'd like us to read games from!\nPlease provide a full path into the root dir of your games folder!\nPlease don't leave a / at the end, though. :P\n")
 
