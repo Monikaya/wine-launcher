@@ -1,3 +1,6 @@
+import shlex
+import subprocess
+
 import os
 import json
 import time
@@ -71,14 +74,14 @@ def launchGame(gameNumber):
 
     for exe in os.listdir(f"{gameDirectory}/{gameName}"):
         fileName, fileExtension = os.path.splitext(f"{gameDirectory}/{gameName}/{exe}")
-        if fileExtension == ".exe":
+        if fileExtension == ".exe" or fileExtension == ".sh":
             executableChoices.append(exe)
 
     if len(executableChoices) == 1:
         os.system(f'{runCommand} {gameDirectory}/"{gameName}"/"{executableChoices[0]}"')
     else:
         cls()
-        count = 1
+        count = 0
         print(
             "Looks like there are more than one executable files in your game dir! You'll have to pick one for us to launch!"
         )
@@ -89,9 +92,23 @@ def launchGame(gameNumber):
         cls()
         print("Have fun!")
         time.sleep(1)
-        os.system(
-            f'{runCommand} games/"{gameName}"/"{executableChoices[int(gameChoice)]}"'
-        )
+
+        scriptPath = os.path.join(gameDirectory, gameName, executableChoices[int(gameChoice)])
+        directoryPath = os.path.dirname(scriptPath)
+        fileName = os.path.basename(scriptPath)
+        
+        escapedDirectoryPath = shlex.quote(directoryPath)
+        escapedFilePath = shlex.quote(os.path.join(directoryPath, fileName))
+
+        if fileName.endswith(".exe"):
+            print(escapedFilePath)
+            command = f"{runCommand} {escapedFilePath}"
+            subprocess.run(f"{runCommand} {escapedFilePath}", shell=True)
+        else:
+            print(f"{escapedFilePath}")
+            subprocess.run(["sh", executableChoices[int(gameChoice)]], shell=False, cwd=directoryPath)
+
+        
 
 
 # Lists the games and asks which one you wanna play
