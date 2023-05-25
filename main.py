@@ -46,21 +46,21 @@ def setupUser():
             "Seems like you've entered something that doesn't work here. Welp, guess we'll just send ya to do it again :D"
         )
         return
-        
-        cls()
-        gameDirectory = input("Time to setup the directory where you'd like us to read games from!\nPlease provide a full path into the root dir of your games folder!\n")
+    print("among us")
+    cls()
+    gameDirectory = input("Time to setup the directory where you'd like us to read games from!\nPlease provide a full path into the root dir of your games folder!\nPlease don't leave a / at the end, though. :P\n")
 
-        jsondata = {
-            "StartCommand": startcommand if startcommand else "wine",
-            "GameDirectory": gameDirectory
-        }
+    jsondata = {
+        "StartCommand": startcommand if startcommand else "wine",
+        "GameDirectory": gameDirectory
+    }
 
-        with open("config.json", "w") as jsonfile:
-            json.dump(jsondata, jsonfile)
-            print("Write successful! Thanks for helping me get you all setup!")
-            time.sleep(2)
-            print("Remember, you can always edit the config.json file to change these!")
-            time.sleep(3)
+    with open("config.json", "w") as jsonfile:
+        json.dump(jsondata, jsonfile)
+        print("Write successful! Thanks for helping me get you all setup!")
+        time.sleep(2)
+        print("Remember, you can always edit the config.json file to change these!")
+        time.sleep(3)
 
 
 # Actually launches the game and checks if the user has a custom script or multiple exe's to choose from
