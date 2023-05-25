@@ -2,7 +2,6 @@ import os
 import json
 import time
 
-
 # Function I ngl stole from StackOverflow that clears linux terminal
 # Link to original post: https://stackoverflow.com/questions/517970/how-to-clear-the-interpreter-console
 # 2nd answer from user "popcnt"
@@ -15,63 +14,68 @@ def getRunCommand():
         data = json.load(jsonfile)
     return data["StartCommand"]
 
+def getGameDirectory():
+    with open("config.json", "r") as jsonfile:
+        data = json.load(jsonfile)
+    return data["GameDirectory"]
+
 
 # Function that really just asks the user if they want to define a custom start command for their apps and if so, what would they like that command to be, and then loads itt into config.json
 def setupUser():
     cls()
 
-    if not os.path.exists("games/"):
+    customyn = input(
+        "Let's get you setup with a shiny new config file!\nWe don't really need much from you, but would you like a custom start command for your apps? [Y/N] "
+    )
+    if customyn.lower() == "y":
+        startcommand = input(
+            "Cool! What would you like that command to be, then?\nWe only need the bit before before your .exe file for this\nRemember, you can always change it in the config.json file! "
+        )
+        time.sleep(2)
+    elif customyn.lower() == "n":
         print(
-            "Oops, looks like you don't have a games folder! We'll get that sorted for you right away!\nRemember, any game/app you want us to be able to use must be inside of this directory!\nThey must also have a .exe file in their root!"
+            "Cool! In this case then, we'll use the default command I've prepared for you!"
         )
-        time.sleep(5)
-        os.makedirs("games/")
+        time.sleep(2)
+        startcommand = False
+    else:
+        print(
+            "Seems like you've entered something that doesn't work here. Welp, guess we'll just send ya to do it again :D"
+        )
+        return
+        
         cls()
+        gameDirectory = input("Time to setup the directory where you'd like us to read games from!\nPlease provide a full path into the root dir of your games folder!\n")
 
-    if not os.path.exists("config.json"):
-        customyn = input(
-            "Let's get you setup with a shiny new config file!\nWe don't really need much from you, but would you like a custom start command for your apps? [Y/N] "
-        )
-        if customyn.lower() == "y":
-            startcommand = input(
-                "Cool! What would you like that command to be, then?\nWe only need the bit before before your .exe file for this\nRemember, you can always change it in the config.json file! "
-            )
-            time.sleep(2)
-        elif customyn.lower() == "n":
-            print(
-                "Cool! In this case then, we'll use the default command I've prepared for you!"
-            )
-            time.sleep(2)
-            startcommand = False
-        else:
-            print(
-                "Seems like you've entered something that doesn't work here. Welp, guess we'll just send ya to do it again :D"
-            )
-            return
-
-        jsondata = {"StartCommand": startcommand if startcommand else "wine"}
+        jsondata = {
+            "StartCommand": startcommand if startcommand else "wine",
+            "GameDirectory": gameDirectory
+        }
 
         with open("config.json", "w") as jsonfile:
             json.dump(jsondata, jsonfile)
             print("Write successful! Thanks for helping me get you all setup!")
             time.sleep(2)
+            print("Remember, you can always edit the config.json file to change these!")
+            time.sleep(3)
 
 
 # Actually launches the game and checks if the user has a custom script or multiple exe's to choose from
 def launchGame(gameNumber):
     cls()
-    gameDir = f"{os.listdir('games/')[gameNumber]}"
+    gameDirectory = getGameDirectory()
+    gameName = f"{os.listdir(gameDirectory)[gameNumber]}"
     runCommand = getRunCommand()
 
     executableChoices = []
 
-    for exe in os.listdir(f"games/{gameDir}"):
-        fileName, fileExtension = os.path.splitext(f"games/{gameDir}/{exe}")
+    for exe in os.listdir(f"{gameDirectory}/{gameName}"):
+        fileName, fileExtension = os.path.splitext(f"{gameDirectory}/{gameName}/{exe}")
         if fileExtension == ".exe":
             executableChoices.append(exe)
 
     if len(executableChoices) == 1:
-        os.system(f'{runCommand} games/"{gameDir}"/"{executableChoices[0]}"')
+        os.system(f'{runCommand} {gameDirectory}/"{gameName}"/"{executableChoices[0]}"')
     else:
         cls()
         count = 1
@@ -86,7 +90,7 @@ def launchGame(gameNumber):
         print("Have fun!")
         time.sleep(1)
         os.system(
-            f'{runCommand} games/"{gameDir}"/"{executableChoices[int(gameChoice)]}"'
+            f'{runCommand} games/"{gameName}"/"{executableChoices[int(gameChoice)]}"'
         )
 
 
@@ -94,10 +98,12 @@ def launchGame(gameNumber):
 def displayGames():
     cls()
     count = 0
+    gameDirectory = getGameDirectory()
+
     print(
         "Time to pick what to play! Select the number corresponding with the game you want!"
     )
-    for game in os.listdir("games/"):
+    for game in os.listdir(gameDirectory):
         print(f"{count}) {game}")
         count += 1
     while True:
@@ -141,7 +147,7 @@ def launchMenu():
 def main():
     print("Hey! Welcome to the library!")
 
-    while not os.path.exists("config.json") or not os.path.exists("games/"):
+    while not os.path.exists("config.json"):
         setupUser()
 
     launchMenu()
