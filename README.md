@@ -19,3 +19,4 @@ Pull requests always welcome
 - Add .sh file support
 - Split functions into their own files
 - Other cool stuff I'm forgetting to do
+- Make it so if there's a .sh then it only shows sh or wtv

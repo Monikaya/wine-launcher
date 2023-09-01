@@ -107,6 +107,12 @@ def launchGame(gameNumber):
         else:
             print(f"{escapedFilePath}")
             subprocess.run(["sh", executableChoices[int(gameChoice)]], shell=False, cwd=directoryPath)
+        
+        # Exits the process after the game process dies
+        cls()
+        print("Hope you had a good time! See you again later :D")
+        time.sleep(5)
+        exit()
 
         
 
